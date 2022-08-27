@@ -1,16 +1,28 @@
-<button class="btn btn-dark cloth-card d-flex text-start w-100 h-100" (click)="item.active = !item.active" [ngClass]="{'active':item.active}">
+<button
+  class="btn btn-dark cloth-card d-flex text-start w-100"
+  (click)="item.active = !item.active"
+  [ngClass]="{ active: item.active, 'flex-column': type == 0 }"
+>
   <div
     class="me-2 opacity-50"
-    style="width: 40%; height: 100px; background-color: brown"
+    style="height: 100px; background-color: brown"
+    [style.width]="(type == 0 ? '100%' : '8em')"
+    [style.height]="(type == 0 ? 15 : 5) + 'em'"
+    *ngIf="type != 2"
   ></div>
-  <div class="w-100 h-100 d-flex flex-column justify-content-between">
-    <div class="fs-5">{{ item.title }}</div>
-    <div class="d-flex justify-content-between align-items-end">
-      <div>
-        <div class="">Ширина: {{ item.width }} см.</div>
-        <div class="">Длина: {{ item.height }} см.</div>
+  <div class="w-100" [ngSwitch]="type">
+    <div *ngSwitchCase="2">
+      {{ item.title }} {{ item.width }} / {{ item.height }} : {{ item.price }}
+    </div>
+    <div *ngSwitchDefault class="d-flex flex-column">
+      <div class="fs-5">{{ item.title }}</div>
+      <div class="d-flex justify-content-between align-items-end">
+        <div>
+          <div>Ширина: {{ item.width }}&nbsp;см.</div>
+          <div>Длина: {{ item.height }}&nbsp;см.</div>
+        </div>
+        <div class="fs-3">{{ item.price }}&nbsp;грн.</div>
       </div>
-      <div class="fs-5">Цена: {{ item.price }} грн.</div>
     </div>
   </div>
 </button>

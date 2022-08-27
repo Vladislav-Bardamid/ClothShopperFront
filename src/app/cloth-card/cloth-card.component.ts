@@ -7,6 +7,7 @@ import { Cloth } from '../cloth';
   styleUrls: ['./cloth-card.component.scss'],
 })
 export class ClothCardComponent implements OnInit {
+  @Input() type = 0;
   @Input() item : Cloth = {
     title:"",
     active:false,
