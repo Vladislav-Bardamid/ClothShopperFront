@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  baseUrl: 'https://green-island-012771710.1.azurestaticapps.net/ ',
+  baseUrl: 'https://white-river-037033e03.1.azurestaticapps.net/',
 };
