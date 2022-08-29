@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Cloth } from '../cloth';
+import { Cloth } from 'src/app/types/cloth';
 
 @Component({
   selector: 'app-cloth-card',
@@ -7,6 +7,7 @@ import { Cloth } from '../cloth';
   styleUrls: ['./cloth-card.component.scss'],
 })
 export class ClothCardComponent implements OnInit {
+  @Input() isFake = 0;
   @Input() type = 0;
   @Input() item : Cloth = {
     title:"",

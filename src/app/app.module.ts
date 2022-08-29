@@ -11,11 +11,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { FormsModule } from '@angular/forms';
-import { ClothCardComponent } from './cloth-card/cloth-card.component';
+import { ClothCardComponent } from './catalog/cloth-card/cloth-card.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpService } from './services/httpService';
+import { CatalogComponent } from './catalog/catalog.component';
 
 var appModules = [
   BrowserModule,
@@ -23,6 +26,7 @@ var appModules = [
   BrowserAnimationsModule,
   FormsModule,
   HttpClientModule,
+  MatSelectModule,
 ];
 var matModules = [
   MatInputModule,
@@ -31,10 +35,11 @@ var matModules = [
   MatButtonModule,
   MatMenuModule,
   MatButtonToggleModule,
+  MatFormFieldModule,
 ];
 
 @NgModule({
-  declarations: [AppComponent, ClothCardComponent],
+  declarations: [AppComponent, ClothCardComponent, CatalogComponent],
   imports: [appModules, matModules],
   providers: [HttpService],
   bootstrap: [AppComponent],

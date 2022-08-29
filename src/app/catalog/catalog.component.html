@@ -1,0 +1,88 @@
+<div class="row flex-column flex-md-row">
+  <div class="col">
+    <mat-form-field class="w-100 fs-5">
+      <mat-label>Введите фильтр для поиска</mat-label>
+      <input
+        matInput
+        type="text"
+        [(ngModel)]="value"
+        (ngModelChange)="onChanged()"
+      />
+      <button *ngIf="value" matSuffix mat-icon-button (click)="value = ''">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+  <div class="col-auto" style="width: 12em">
+    <mat-form-field class="w-100 fs-5">
+      <mat-label>Мин. цена</mat-label>
+      <input
+        matInput
+        type="number"
+        [(ngModel)]="minPrice"
+        (ngModelChange)="onChanged()"
+      />
+    </mat-form-field>
+  </div>
+  <div class="col-auto" style="width: 12em">
+    <mat-form-field class="w-100 fs-5">
+      <mat-label>Макс. цена</mat-label>
+      <input
+        matInput
+        type="number"
+        [(ngModel)]="maxPrice"
+        (ngModelChange)="onChanged()"
+      />
+    </mat-form-field>
+  </div>
+  <div class="col-auto row">
+    <div class="col-auto">
+      <mat-form-field appearance="fill">
+        <mat-label>Сортировка</mat-label>
+        <mat-select [(value)]="sorting">
+          <mat-option [value]="0">По дате</mat-option>
+          <mat-option [value]="1">По названию</mat-option>
+          <mat-option [value]="2">По возростанию цены</mat-option>
+          <mat-option [value]="3">По убыванию цены</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-auto">
+      <mat-button-toggle-group
+        name="fontStyle"
+        [(ngModel)]="type"
+        (ngModelChange)="onTypeChanged()"
+      >
+        <mat-button-toggle [value]="0"
+          ><mat-icon>grid_view</mat-icon></mat-button-toggle
+        >
+        <mat-button-toggle [value]="1"
+          ><mat-icon>splitscreen</mat-icon></mat-button-toggle
+        >
+        <mat-button-toggle [value]="2"
+          ><mat-icon>view_headline</mat-icon></mat-button-toggle
+        >
+      </mat-button-toggle-group>
+    </div>
+    <div class="col-auto">
+      <button mat-stroked-button (click)="onClear()">Очистить</button>
+    </div>
+  </div>
+</div>
+<div
+  class="cloth-grid"
+  [ngClass]="{
+    'big-cloth-grid': type == 0,
+    'medium-cloth-grid': type == 1,
+    'small-cloth-grid': type == 2
+  }"
+>
+  <div *ngFor="let item of items">
+    <app-cloth-card
+      (onChanged)="onChanged()"
+      [item]="item"
+      [type]="type"
+    ></app-cloth-card>
+  </div>
+</div>
+
