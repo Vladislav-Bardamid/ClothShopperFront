@@ -22,7 +22,7 @@
 .medium-cloth-grid{
   --grid-layout-gap: 0.5rem;
    --grid-column-count: 3;
-   --grid-item--min-width: 25rem;
+   --grid-item--min-width: 22rem;
  
    --gap-count: calc(var(--grid-column-count) - 1);
    --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
@@ -31,13 +31,13 @@
    display: grid;
    grid-template-columns: repeat(auto-fill, minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr));
    grid-gap: var(--grid-layout-gap);
-   grid-auto-rows: 7rem;
+   grid-auto-rows: 134px;
 }
 
 .small-cloth-grid{
   --grid-layout-gap: 0.5rem;
    --grid-column-count: 5;
-   --grid-item--min-width: 16rem;
+   --grid-item--min-width: 15.5rem;
  
    --gap-count: calc(var(--grid-column-count) - 1);
    --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));

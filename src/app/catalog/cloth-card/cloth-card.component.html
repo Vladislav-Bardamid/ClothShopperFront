@@ -1,11 +1,11 @@
 <button
   class="btn btn-dark cloth-card d-flex align-items-stretch text-start w-100 h-100"
-  (click)="item.active = !item.active" [disabled]="isFake? true : null"
-  [ngClass]="{ active: !isFake && item.active, 'flex-column': type == 0 }"
+  (click)="item.active = !item.active"
+  [ngClass]="{ active: item.active, 'flex-column': type == 0 }"
 >
   <div
     class="opacity-50 h-100"
-    style="background-color: brown; aspect-ratio: 4/3; min-width: 0;"
+    style="background-color: brown; aspect-ratio: 4/3; min-width: 0"
     *ngIf="type != 2"
   ></div>
   <ng-container [ngSwitch]="type">
@@ -18,12 +18,15 @@
       [ngClass]="{ 'flex-fill ms-2': type == 1 }"
     >
       <div class="fs-5">{{ item.title }}</div>
-      <div class="d-flex justify-content-between align-items-end">
+      <div
+        class="d-flex justify-content-between"
+        [ngClass]="{ 'align-items-end': type == 0, 'flex-column': type == 1 }"
+      >
         <div>
           <div>Ширина:&nbsp;{{ item.width }}&nbsp;см.</div>
           <div>Длина:&nbsp;{{ item.height }}&nbsp;см.</div>
         </div>
-        <div class="fs-3 ms-2">{{ item.price }}&nbsp;грн.</div>
+        <div class="fs-3">{{ item.price }}&nbsp;грн.</div>
       </div>
     </div>
   </ng-container>
