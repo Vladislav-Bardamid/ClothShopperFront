@@ -19,6 +19,7 @@ import { ClothCardComponent } from './catalog/cloth-card/cloth-card.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpService } from './services/httpService';
 import { CatalogComponent } from './catalog/catalog.component';
+import { AuthComponent } from './auth/auth.component';
 
 var appModules = [
   BrowserModule,
@@ -39,7 +40,7 @@ var matModules = [
 ];
 
 @NgModule({
-  declarations: [AppComponent, ClothCardComponent, CatalogComponent],
+  declarations: [AppComponent, ClothCardComponent, CatalogComponent, AuthComponent],
   imports: [appModules, matModules],
   providers: [HttpService],
   bootstrap: [AppComponent],

@@ -7,6 +7,7 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -23,8 +24,13 @@ import {
   ],
 })
 export class AppComponent implements OnInit {
+  constructor(private router: Router){}
   hideScrollButton = true;
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if(localStorage.getItem('auth') == undefined){
+      this.router.navigateByUrl('auth');
+    }
+  }
 
   @HostListener('window:scroll', ['$event']) doSomething() {
     this.hideScrollButton = window.scrollY < 1000;
