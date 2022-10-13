@@ -7,7 +7,7 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -24,11 +24,17 @@ import { Router } from '@angular/router';
   ],
 })
 export class AppComponent implements OnInit {
-  constructor(private router: Router){}
+  constructor(private router: Router, private route: ActivatedRoute) {}
   hideScrollButton = true;
   ngOnInit(): void {
-    if(localStorage.getItem('auth') == undefined){
-      this.router.navigateByUrl('auth');
+    var localToken = localStorage.getItem('auth');
+    if (!localToken) {
+      this.route.queryParams.subscribe((params) => {
+        var token = params['token'];
+        if (!token) {
+          this.router.navigateByUrl('auth');
+        }
+      });
     }
   }
 

@@ -7,8 +7,8 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./auth.component.scss'],
 })
 export class AuthComponent implements OnInit {
-  scope = 'offline,photos';
-  link = `https://oauth.vk.com/authorize?client_id=${environment.clientId}&display=page&redirect_uri=https://oauth.vk.com/blank.html&response_type=token&scope=${this.scope}`;
+  scope = 'photos';
+  link = `https://oauth.vk.com/authorize?client_id=${environment.clientId}&display=page&redirect_uri=${this.router.url}&response_type=token&scope=${this.scope}`;
   constructor(private router: Router) {}
 
   ngOnInit(): void {}
