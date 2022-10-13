@@ -6,6 +6,7 @@ import { CatalogComponent } from './catalog/catalog.component';
 const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
     component: CatalogComponent,
   },
   {

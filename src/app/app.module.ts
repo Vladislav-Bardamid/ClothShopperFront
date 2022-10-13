@@ -29,6 +29,7 @@ var appModules = [
   HttpClientModule,
   MatSelectModule,
 ];
+
 var matModules = [
   MatInputModule,
   MatIconModule,
@@ -40,7 +41,12 @@ var matModules = [
 ];
 
 @NgModule({
-  declarations: [AppComponent, ClothCardComponent, CatalogComponent, AuthComponent],
+  declarations: [
+    AppComponent,
+    ClothCardComponent,
+    CatalogComponent,
+    AuthComponent,
+  ],
   imports: [appModules, matModules],
   providers: [HttpService],
   bootstrap: [AppComponent],
