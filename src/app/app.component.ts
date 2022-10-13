@@ -27,15 +27,7 @@ export class AppComponent implements OnInit {
   constructor(private router: Router, private route: ActivatedRoute) {}
   hideScrollButton = true;
   ngOnInit(): void {
-    var localToken = localStorage.getItem('auth');
-    if (!localToken) {
-      this.route.queryParams.subscribe((params) => {
-        var token = params['token'];
-        if (!token) {
-          this.router.navigateByUrl('auth');
-        }
-      });
-    }
+    
   }
 
   @HostListener('window:scroll', ['$event']) doSomething() {
