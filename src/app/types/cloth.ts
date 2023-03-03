@@ -1,7 +1,10 @@
 export class Cloth {
   title = '';
-  width = 0;
   height = 0;
+  width = 0;
   price = 0;
+  urlSm = '';
+  urlMd = '';
+  urlLg = '';
   active = false;
 }

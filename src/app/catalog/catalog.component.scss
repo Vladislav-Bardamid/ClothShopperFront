@@ -5,45 +5,51 @@
   height: 100%;
 }
 
+.cloth-grid{
+  display: grid;
+  // display: flex;
+  // justify-content: space-between;
+  // width: 100%;
+  // flex-wrap: wrap;
+}
+
 .big-cloth-grid{
-   --grid-layout-gap: 0.5rem;
-   --grid-column-count: 3;
-   --grid-item--min-width: 20rem;
- 
-   --gap-count: calc(var(--grid-column-count) - 1);
-   --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
-   --grid-item--max-width: calc((100% - var(--total-gap-width)) / var(--grid-column-count));
- 
-   display: grid;
-   grid-template-columns: repeat(auto-fill, minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr));
-   grid-gap: var(--grid-layout-gap);
+  --grid-layout-gap: 0.5rem;
+  --grid-column-count: 7;
+  --grid-item--min-width: 20rem;
+
+  --gap-count: calc(var(--grid-column-count) - 1);
+  --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
+  --grid-item--max-width: calc((100% - var(--total-gap-width)) / var(--grid-column-count));
+  
+  grid-template-columns: repeat(auto-fill, minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr));
+  grid-gap: var(--grid-layout-gap);
+  grid-auto-rows: 22rem;
 }
 
 .medium-cloth-grid{
-  --grid-layout-gap: 0.5rem;
-   --grid-column-count: 3;
-   --grid-item--min-width: 22rem;
- 
-   --gap-count: calc(var(--grid-column-count) - 1);
-   --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
-   --grid-item--max-width: calc((100% - var(--total-gap-width)) / var(--grid-column-count));
- 
-   display: grid;
-   grid-template-columns: repeat(auto-fill, minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr));
-   grid-gap: var(--grid-layout-gap);
-   grid-auto-rows: 134px;
+ --grid-layout-gap: 0.5rem;
+  --grid-column-count: 7;
+  --grid-item--min-width: 22rem;
+
+  --gap-count: calc(var(--grid-column-count) - 1);
+  --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
+  --grid-item--max-width: calc((100% - var(--total-gap-width)) / var(--grid-column-count));
+
+  grid-template-columns: repeat(auto-fill, minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr));
+  grid-gap: var(--grid-layout-gap);
+  grid-auto-rows: 134px;
 }
 
 .small-cloth-grid{
-  --grid-layout-gap: 0.5rem;
-   --grid-column-count: 5;
-   --grid-item--min-width: 15.5rem;
- 
-   --gap-count: calc(var(--grid-column-count) - 1);
-   --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
-   --grid-item--max-width: calc((100% - var(--total-gap-width)) / var(--grid-column-count));
- 
-   display: grid;
-   grid-template-columns: repeat(auto-fill, minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr));
-   grid-gap: var(--grid-layout-gap);
+ --grid-layout-gap: 0.5rem;
+  --grid-column-count: 7;
+  --grid-item--min-width: 15.5rem;
+
+  --gap-count: calc(var(--grid-column-count) - 1);
+  --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
+  --grid-item--max-width: calc((100% - var(--total-gap-width)) / var(--grid-column-count));
+
+  grid-template-columns: repeat(auto-fill, minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr));
+  grid-gap: var(--grid-layout-gap);
 }

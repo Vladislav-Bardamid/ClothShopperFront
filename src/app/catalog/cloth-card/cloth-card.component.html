@@ -1,23 +1,34 @@
 <button
-  class="btn btn-dark cloth-card d-flex align-items-stretch text-start w-100 h-100"
+  class="btn btn-dark cloth-card d-flex align-items-stretch text-start w-100 h-100 p-0 text-nowrap overflow-hidden"
   (click)="item.active = !item.active"
-  [ngClass]="{ active: item.active, 'flex-column': type == 0 }"
+  [ngClass]="{ active: item.active, 'flex-column full-preview': type == 0 }"
 >
   <div
-    class="opacity-50 h-100"
-    style="background-color: brown; aspect-ratio: 4/3; min-width: 0"
+    class="opacity-50 text-center overflow-hidden bg-black position-relative"
+    style="flex-basis: 10rem"
+    [ngClass]="{ 'flex-fill': type == 0 }"
     *ngIf="type != 2"
-  ></div>
-  <ng-container [ngSwitch]="type">
+  >
+    <img [src]="item.urlSm" />
+  </div>
+  <div class="p-2" [ngSwitch]="type">
     <div *ngSwitchCase="2">
       {{ item.title }} {{ item.width }} / {{ item.height }} : {{ item.price }}
     </div>
     <div
       *ngSwitchDefault
-      class="d-flex flex-column justify-content-between"
+      class="d-flex flex-column justify-content-between overflow-hidden"
       [ngClass]="{ 'flex-fill ms-2': type == 1 }"
     >
-      <div class="fs-5">{{ item.title }}</div>
+      <div
+        class="fs-7 overflow-hidden"
+        style="text-overflow: ellipsis"
+        [matTooltip]="item.title"
+        matTooltipPosition="right"
+        matTooltipClass="card-tooltip"
+      >
+        {{ item.title }}
+      </div>
       <div
         class="d-flex justify-content-between"
         [ngClass]="{ 'align-items-end': type == 0, 'flex-column': type == 1 }"
@@ -29,5 +40,5 @@
         <div class="fs-3">{{ item.price }}&nbsp;грн.</div>
       </div>
     </div>
-  </ng-container>
+  </div>
 </button>

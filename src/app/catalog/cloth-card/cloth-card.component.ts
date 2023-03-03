@@ -7,15 +7,8 @@ import { Cloth } from 'src/app/types/cloth';
   styleUrls: ['./cloth-card.component.scss'],
 })
 export class ClothCardComponent implements OnInit {
-  @Input() isFake = 0;
   @Input() type = 0;
-  @Input() item : Cloth = {
-    title:"",
-    active:false,
-    height:0,
-    price:0,
-    width:0
-  };
+  @Input() item = new Cloth();
 
   constructor() {}
   ngOnInit() {}

@@ -1,6 +1,7 @@
-import { Component, HostListener, OnInit } from '@angular/core';
-import { HttpService } from '../services/httpService';
+import { Component, Input, OnInit, Output } from '@angular/core';
+import { ClothService } from '../services/clothService';
 import { Cloth } from '../types/cloth';
+import { Dialogs } from '../dialogs/dialogs';
 
 @Component({
   selector: 'app-catalog',
@@ -8,29 +9,33 @@ import { Cloth } from '../types/cloth';
   styleUrls: ['./catalog.component.scss'],
 })
 export class CatalogComponent implements OnInit {
-  title = 'ClothShopperFront';
-  value = '';
-  minPrice = 0;
-  maxPrice = 0;
   type = 0;
   sorting = 0;
   items: Cloth[] = [];
 
-  constructor(private httpService: HttpService) {}
+  constructor(private clothService: ClothService, private dialogs: Dialogs) {}
+
   ngOnInit() {
     this.type = Number(localStorage.getItem('type') ?? 0);
-    this.httpService.getClothList().subscribe((data) => {
-      this.items = data;
-    });
-  }
-  onChanged() {}
-  onTypeChanged() {
-    localStorage.setItem('type', String(this.type));
+    this.update();
   }
 
-  onClear() {
+  onChanged() {}
+
+  clear() {
     this.items.forEach((element) => {
       element.active = false;
+    });
+  }
+
+  update() {
+    this.clothService.getPhotos().subscribe((response) => {
+      if (response.error) {
+        this.dialogs.openErrorDialog(response.error);
+        return;
+      }
+
+      this.items = response.data;
     });
   }
 }

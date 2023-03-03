@@ -8,6 +8,9 @@ import {
   trigger,
 } from '@angular/animations';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ClothService } from './services/clothService';
+import { Dialogs } from './dialogs/dialogs';
+import { Cloth } from './types/cloth';
 
 @Component({
   selector: 'app-root',
@@ -24,11 +27,9 @@ import { ActivatedRoute, Router } from '@angular/router';
   ],
 })
 export class AppComponent implements OnInit {
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  constructor(private router: Router) {}
+  ngOnInit(): void {}
   hideScrollButton = true;
-  ngOnInit(): void {
-    
-  }
 
   @HostListener('window:scroll', ['$event']) doSomething() {
     this.hideScrollButton = window.scrollY < 1000;
