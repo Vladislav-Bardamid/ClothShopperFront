@@ -1,72 +1,86 @@
-<div class="row flex-column flex-md-row mx-auto container">
+<div class="row mx-auto container pb-3">
+  <form
+    [formGroup]="filterForm"
+    novalidate
+    class="col row flex-column flex-md-row"
+  >
     <div class="col">
-      <mat-form-field class="w-100 fs-5">
+      <mat-form-field
+        appearance="outline"
+        subscriptSizing="dynamic"
+        class="w-100 fs-5"
+      >
         <mat-label>Введите фильтр для поиска</mat-label>
-        <input
-          matInput
-          type="text"
-          [(ngModel)]="value"
-          (ngModelChange)="onChanged()"
-        />
-        <button *ngIf="value" matSuffix mat-icon-button (click)="value = ''">
+        <input matInput formControlName="text" type="text" />
+        <button *ngIf="filterForm.value.text" matSuffix mat-icon-button (click)="this.filterForm.controls.text.setValue('')">
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
     </div>
     <div class="col-auto" style="width: 12em">
-      <mat-form-field class="w-100 fs-5">
+      <mat-form-field
+        appearance="outline"
+        subscriptSizing="dynamic"
+        class="w-100 fs-5"
+      >
         <mat-label>Мин. цена</mat-label>
-        <input
-          matInput
-          type="number"
-          [(ngModel)]="minPrice"
-          (ngModelChange)="onChanged()"
-        />
+        <input matInput formControlName="minPrice" type="number" min="0" />
       </mat-form-field>
     </div>
     <div class="col-auto" style="width: 12em">
-      <mat-form-field class="w-100 fs-5">
+      <mat-form-field
+        appearance="outline"
+        subscriptSizing="dynamic"
+        class="w-100 fs-5"
+      >
         <mat-label>Макс. цена</mat-label>
-        <input
-          matInput
-          type="number"
-          [(ngModel)]="maxPrice"
-          (ngModelChange)="onChanged()"
-        />
+        <input matInput formControlName="maxPrice" type="number" min="0" />
       </mat-form-field>
     </div>
-    <div class="col-auto row">
-      <div class="col-auto">
-        <mat-form-field appearance="fill">
-          <mat-label>Сортировка</mat-label>
-          <mat-select [(value)]="sorting">
-            <mat-option [value]="0">По дате</mat-option>
-            <mat-option [value]="1">По названию</mat-option>
-            <mat-option [value]="2">По возростанию цены</mat-option>
-            <mat-option [value]="3">По убыванию цены</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div class="col-auto">
-        <mat-button-toggle-group
-          name="fontStyle"
-          [(ngModel)]="type"
-          (ngModelChange)="onTypeChanged()"
+    <div class="col-auto">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Сортировка</mat-label>
+        <mat-select formControlName="sortType">
+          <mat-option [value]="0">По дате</mat-option>
+          <mat-option [value]="1">По названию</mat-option>
+          <mat-option [value]="2">По возростанию цены</mat-option>
+          <mat-option [value]="3">По убыванию цены</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </form>
+  <div class="col-auto row align-items-md-center">
+    <div class="col-auto">
+      <mat-button-toggle-group
+        [value]="type"
+        [(ngModel)]="_type"
+        (ngModelChange)="type = _type"
+      >
+        <mat-button-toggle [value]="0" matTooltip="Большие"
+          ><mat-icon>grid_view</mat-icon></mat-button-toggle
         >
-          <mat-button-toggle [value]="0"
-            ><mat-icon>grid_view</mat-icon></mat-button-toggle
-          >
-          <mat-button-toggle [value]="1"
-            ><mat-icon>splitscreen</mat-icon></mat-button-toggle
-          >
-          <mat-button-toggle [value]="2"
-            ><mat-icon>view_headline</mat-icon></mat-button-toggle
-          >
-        </mat-button-toggle-group>
-      </div>
-      <div class="col-auto">
-        <button mat-stroked-button (click)="onFilterClear.emit()">Очистить</button>
-        <button mat-stroked-button (click)="onFilterUpdate.emit()">Обновить</button>
-      </div>
+        <mat-button-toggle [value]="1" matTooltip="Средние"
+          ><mat-icon>splitscreen</mat-icon></mat-button-toggle
+        >
+        <mat-button-toggle [value]="2" matTooltip="Малые"
+          ><mat-icon>view_headline</mat-icon></mat-button-toggle
+        >
+      </mat-button-toggle-group>
+    </div>
+    <div class="col-auto">
+      <button mat-icon-button (click)="resetFilters()" matTooltip="Сбросить фильтры">
+        <mat-icon>filter_alt_off</mat-icon>
+      </button>
+    </div>
+    <div class="col-auto">
+      <button mat-icon-button (click)="onClear.emit()" matTooltip="Сбросить выделенные товары">
+        <mat-icon>layers_clear</mat-icon>
+      </button>
+    </div>
+    <div class="col-auto">
+      <button mat-icon-button (click)="onFilterUpdate.emit()" matTooltip="Обновить">
+        <mat-icon>update</mat-icon>
+      </button>
     </div>
   </div>
+</div>

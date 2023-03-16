@@ -1,19 +1,51 @@
 <button
   class="btn btn-dark cloth-card d-flex align-items-stretch text-start w-100 h-100 p-0 text-nowrap overflow-hidden"
   (click)="item.active = !item.active"
-  [ngClass]="{ active: item.active, 'flex-column full-preview': type == 0 }"
+  [ngClass]="{ active: item.active, 'flex-column': type == 0 }"
 >
   <div
-    class="opacity-50 text-center overflow-hidden bg-black position-relative"
-    style="flex-basis: 10rem"
-    [ngClass]="{ 'flex-fill': type == 0 }"
+    class="text-center overflow-hidden bg-black position-relative"
+    [ngClass]="{
+      'flex-fill': type == 0,
+      'medium-type-preview flex-shrink-0': type == 1
+    }"
     *ngIf="type != 2"
   >
-    <img [src]="item.urlSm" />
+    <mat-icon
+      *ngIf="item.scrap"
+      class="position-absolute text-warning h-auto w-auto"
+      [ngClass]="{ 'fs-3': type == 0 }"
+      style="top: 0.5rem; right: 0.5rem"
+      [matTooltip]="item.scrap"
+      matTooltipClass="card-tooltip"
+      >warning</mat-icon
+    >
+    <img [src]="item.urlSm" class="h-100" />
   </div>
-  <div class="p-2" [ngSwitch]="type">
-    <div *ngSwitchCase="2">
-      {{ item.title }} {{ item.width }} / {{ item.height }} : {{ item.price }}
+  <div
+    class="p-2"
+    [ngClass]="{ 'flex-fill overflow-hidden': type == 1 || type == 2 }"
+    [ngSwitch]="type"
+  >
+    <div
+      *ngSwitchCase="2"
+      class="overflow-hidden ellipsis d-flex"
+      style="vertical-align: middle"
+    >
+      <div
+        class="flex-fill overflow-hidden ellipsis"
+        [matTooltip]="itemFullDescription()"
+        matTooltipClass="card-tooltip"
+      >
+        {{ itemFullDescription() }}
+      </div>
+      <mat-icon
+        *ngIf="item.scrap"
+        class="text-warning flex-shrink-0"
+        [matTooltip]="item.scrap"
+        matTooltipClass="card-tooltip"
+        >warning</mat-icon
+      >
     </div>
     <div
       *ngSwitchDefault
@@ -21,10 +53,9 @@
       [ngClass]="{ 'flex-fill ms-2': type == 1 }"
     >
       <div
-        class="fs-7 overflow-hidden"
-        style="text-overflow: ellipsis"
+        class="overflow-hidden ellipsis"
+        style="font-weight: 500"
         [matTooltip]="item.title"
-        matTooltipPosition="right"
         matTooltipClass="card-tooltip"
       >
         {{ item.title }}
@@ -33,11 +64,11 @@
         class="d-flex justify-content-between"
         [ngClass]="{ 'align-items-end': type == 0, 'flex-column': type == 1 }"
       >
-        <div>
-          <div>Ширина:&nbsp;{{ item.width }}&nbsp;см.</div>
-          <div>Длина:&nbsp;{{ item.height }}&nbsp;см.</div>
+        <div class="flex-fill" style="color: #aaa">
+          <div>Ширина: {{ item.width }} см.</div>
+          <div>Длина: {{ item.height }} см.</div>
         </div>
-        <div class="fs-3">{{ item.price }}&nbsp;грн.</div>
+        <div class="fs-3">{{ item.price }} грн.</div>
       </div>
     </div>
   </div>

@@ -1,4 +1,8 @@
-<app-catalog-filter (onFilterClear)="clear()" (onFilterUpdate)="update()"></app-catalog-filter>
+<app-catalog-filter
+  (onClear)="clear()"
+  (onFilterUpdate)="update($event)"
+  [(type)]="type"
+></app-catalog-filter>
 <div
   class="cloth-grid mx-auto container-xxxl"
   [ngClass]="{
@@ -6,13 +10,13 @@
     'medium-cloth-grid': type == 1,
     'small-cloth-grid': type == 2
   }"
+  *ngIf="init"
+  [ngSwitch]="items.length > 0"
 >
-  <div *ngFor="let item of items">
-    <app-cloth-card
-      (onChanged)="onChanged()"
-      [item]="item"
-      [type]="type"
-    ></app-cloth-card>
-  </div>
+  <ng-container *ngSwitchCase="true">
+    <div *ngFor="let item of items">
+      <app-cloth-card [item]="item" [type]="type"></app-cloth-card>
+    </div>
+  </ng-container>
+  <app-not-found *ngSwitchCase="false"></app-not-found>
 </div>
-

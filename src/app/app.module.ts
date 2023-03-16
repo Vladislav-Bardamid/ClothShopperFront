@@ -16,8 +16,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ClothCardComponent } from './catalog/cloth-card/cloth-card.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpService } from './services/httpService';
@@ -28,6 +30,7 @@ import { SimpleDialogComponent } from './dialogs/simple-dialog/simple-dialog.com
 import { Dialogs } from './dialogs/dialogs';
 import { CatalogFilterComponent } from './catalog/catalog-filter/catalog-filter.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
+import { NotFoundComponent } from './catalog/not-found/not-found.component';
 
 var appModules = [
   BrowserModule,
@@ -35,6 +38,7 @@ var appModules = [
   BrowserAnimationsModule,
   FormsModule,
   HttpClientModule,
+  ReactiveFormsModule,
 ];
 
 var matModules = [
@@ -48,7 +52,8 @@ var matModules = [
   MatSelectModule,
   MatDialogModule,
   MatTooltipModule,
-  MatToolbarModule
+  MatToolbarModule,
+  MatProgressSpinnerModule,
 ];
 
 @NgModule({
@@ -60,6 +65,7 @@ var matModules = [
     SimpleDialogComponent,
     CatalogFilterComponent,
     ToolbarComponent,
+    NotFoundComponent,
   ],
   imports: [
     appModules,

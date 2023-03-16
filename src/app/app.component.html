@@ -1,14 +1,22 @@
 <app-toolbar></app-toolbar>
-<div class="px-2" style="padding-top: 5rem;">
+<div class="px-2" style="padding-top: 5rem">
   <router-outlet items="items"></router-outlet>
 </div>
-<div
-  @enterLeaveTrigger
-  class="position-fixed hover-opacity-animation rounded"
-  style="right: 5%; bottom: 5%"
-  *ngIf="!hideScrollButton"
->
-  <button mat-fab (click)="scrollToTop()">
-    <mat-icon>keyboard_arrow_up</mat-icon>
-  </button>
+<div class="position-fixed" style="right: 5%; bottom: 5%">
+  <div
+    @enterLeaveTrigger
+    class="hover-opacity-animation rounded pb-3"
+    [hidden]="!showSpinner"
+  >
+  <mat-spinner>keyboard_arrow_up</mat-spinner>
+  </div>
+  <div
+    @enterLeaveTrigger
+    class="hover-opacity-animation rounded"
+    [hidden]="!showScrollButton"
+  >
+    <button mat-fab (click)="scrollToTop()">
+      <mat-icon>keyboard_arrow_up</mat-icon>
+    </button>
+  </div>
 </div>

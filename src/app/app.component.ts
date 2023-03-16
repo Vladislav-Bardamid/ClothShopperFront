@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
 import {
   animate,
   animation,
@@ -11,6 +11,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ClothService } from './services/clothService';
 import { Dialogs } from './dialogs/dialogs';
 import { Cloth } from './types/cloth';
+import { CommonService } from './services/commonService';
+import { delay } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -26,13 +28,30 @@ import { Cloth } from './types/cloth';
     ]),
   ],
 })
-export class AppComponent implements OnInit {
-  constructor(private router: Router) {}
-  ngOnInit(): void {}
-  hideScrollButton = true;
+export class AppComponent implements OnInit, AfterViewInit {
+  constructor(private router: Router, private commonService: CommonService) {}
+
+  showScrollButton = false;
+
+  taskCount = 0;
+  showSpinner = false;
+
+  ngOnInit(): void {
+    this.commonService.showSpinner.pipe(delay(0)).subscribe((value) => {
+      if (value) {
+        this.taskCount++;
+      } else {
+        this.taskCount--;
+      }
+
+      this.showSpinner = value;
+    });
+  }
+
+  ngAfterViewInit(): void {}
 
   @HostListener('window:scroll', ['$event']) doSomething() {
-    this.hideScrollButton = window.scrollY < 1000;
+    this.showScrollButton = window.scrollY > 1000;
   }
 
   scrollToTop() {
