@@ -34,10 +34,13 @@
     >
       <div
         class="flex-fill overflow-hidden ellipsis"
-        [matTooltip]="itemFullDescription()"
+        matTooltip="{{ this.item.title }} {{ this.item.width }} / {{
+          this.item.height
+        }} : {{ this.item.price }}"
         matTooltipClass="card-tooltip"
       >
-        {{ itemFullDescription() }}
+        {{ this.item.title }} {{ this.item.width }} / {{ this.item.height }} :
+        {{ this.item.price }}
       </div>
       <mat-icon
         *ngIf="item.scrap"

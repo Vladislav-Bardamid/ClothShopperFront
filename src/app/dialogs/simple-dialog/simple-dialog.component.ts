@@ -12,10 +12,6 @@ export class SimpleDialogComponent {
     public dialogRef: MatDialogRef<SimpleDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData
   ) {}
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
 }
 
 export class DialogData {

@@ -2,21 +2,21 @@
   (onClear)="clear()"
   (onFilterUpdate)="update($event)"
   [(type)]="type"
+  (typeChange)="typeChange()"
 ></app-catalog-filter>
-<div
-  class="cloth-grid mx-auto container-xxxl"
-  [ngClass]="{
-    'big-cloth-grid': type == 0,
-    'medium-cloth-grid': type == 1,
-    'small-cloth-grid': type == 2
-  }"
-  *ngIf="init"
-  [ngSwitch]="items.length > 0"
->
-  <ng-container *ngSwitchCase="true">
-    <div *ngFor="let item of items">
+<ng-container [ngSwitch]="items.length > 0">
+  <div
+    class="cloth-grid mx-auto container-xxxl"
+    [ngClass]="{
+      'big-cloth-grid': type == 0,
+      'medium-cloth-grid': type == 1,
+      'small-cloth-grid': type == 2
+    }"
+    *ngSwitchCase="true"
+  >
+    <div *ngFor="let item of items" class="position-relative">
       <app-cloth-card [item]="item" [type]="type"></app-cloth-card>
     </div>
-  </ng-container>
-  <app-not-found *ngSwitchCase="false"></app-not-found>
-</div>
+  </div>
+  <app-not-found *ngSwitchCase="false" [hidden]="!init" class="mx-auto"></app-not-found>
+</ng-container>

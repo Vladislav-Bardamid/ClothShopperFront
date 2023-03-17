@@ -24,13 +24,13 @@ export class CatalogComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // this.type = Number(localStorage.getItem('type') ?? 0);
+    this.type = Number(localStorage.getItem('type') ?? 0);
     this.update();
   }
 
-  // typeChange() {
-  //   localStorage.setItem('type', String(this.type));
-  // }
+  typeChange() {
+    localStorage.setItem('type', String(this.type));
+  }
 
   clear() {
     this.items.forEach((element) => {

@@ -7,6 +7,23 @@ import {
   Output,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import {
+  interval,
+  timer,
+  takeWhile,
+  Subject,
+  BehaviorSubject,
+  NEVER,
+} from 'rxjs';
+import {
+  repeat,
+  takeUntil,
+  map,
+  finalize,
+  skip,
+  switchMap,
+  startWith,
+} from 'rxjs/operators';
 import { ClothesFilterModel } from 'src/app/types/filterModel';
 
 @Component({
@@ -20,6 +37,7 @@ export class CatalogFilterComponent implements OnInit {
   maxPrice = 0;
   sorting = 0;
 
+  filterTimer = 0;
   timeout: any;
 
   filterForm = new FormGroup({
@@ -31,11 +49,34 @@ export class CatalogFilterComponent implements OnInit {
 
   lastValues!: ClothesFilterModel;
 
+  interval$ = new Subject<void>();
+  interval = 1500;
+
   constructor() {}
 
   ngOnInit(): void {
     this.lastValues = this.filterForm.value as ClothesFilterModel;
 
+    this.initFilterInterval();
+    this.initFilterChanging();
+  }
+
+  initFilterInterval() {
+    this.interval$
+      .pipe(
+        switchMap(() =>
+          interval(10).pipe(
+            takeUntil(timer(this.interval)),
+            finalize(() => (this.filterTimer = 0))
+          )
+        )
+      )
+      .subscribe((value) => {
+        this.filterTimer = value;
+      });
+  }
+  
+  initFilterChanging() {
     this.filterForm.valueChanges.subscribe((value) => {
       let model = value as ClothesFilterModel;
 
@@ -45,31 +86,37 @@ export class CatalogFilterComponent implements OnInit {
         return;
       }
 
-      this.updateFilterAfterTimer(model);
+      this.interval$.next();
+
+      if (this.timeout) {
+        this.resetLoading();
+      }
+
+      this.timeout = setTimeout(() => {
+        this.onFilterUpdate.emit(model);
+        this.lastValues = this.filterForm.value as ClothesFilterModel;
+      }, this.interval);
     });
   }
 
-  checkFilterChanges(value: ClothesFilterModel) {
-    return Object.keys(value).some(
-      (key) =>
-        value[key as keyof ClothesFilterModel] !=
-        this.lastValues[key as keyof ClothesFilterModel]
-    );
-  }
-
-  resetLoading(){
+  resetLoading() {
     clearTimeout(this.timeout);
   }
 
-  updateFilterAfterTimer(value: ClothesFilterModel) {
-    if (this.timeout) {
-      this.resetLoading()
+  checkFilterChanges(value: ClothesFilterModel) {
+    return !this.areObjectsEqual(value, this.lastValues);
+  }
+
+  areObjectsEqual(obj1: any, obj2: any) {
+    if (Object.keys(obj1).length !== Object.keys(obj2).length) return false;
+
+    for (let key in obj1) {
+      if (Object.prototype.hasOwnProperty.call(obj1, key)) {
+        if (obj1[key] != obj2[key]) return false;
+      }
     }
 
-    this.timeout = setTimeout(() => {
-      this.onFilterUpdate.emit(value);
-      this.lastValues = this.filterForm.value as ClothesFilterModel;
-    }, 1000);
+    return true;
   }
 
   resetFilters() {

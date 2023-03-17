@@ -10,9 +10,6 @@ export class ClothCardComponent implements OnInit {
   @Input() type = 0;
   @Input() item = new Cloth();
 
-  itemFullDescription = () =>
-    `${this.item.title} ${this.item.width} / ${this.item.height} : ${this.item.price}`;
-
   constructor() {}
   ngOnInit() {}
 
