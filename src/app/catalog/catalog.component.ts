@@ -4,7 +4,6 @@ import { Cloth } from '../models/cloth';
 import { Dialogs } from '../dialogs/dialogs';
 import { ClothesFilterModel } from '../models/filterModel';
 import { CommonService } from '../services/commonService';
-import { nameof } from '../../common';
 
 @Component({
   selector: 'app-catalog',
