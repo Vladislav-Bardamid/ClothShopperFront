@@ -10,7 +10,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClothService } from './services/clothService';
 import { Dialogs } from './dialogs/dialogs';
-import { Cloth } from './types/cloth';
+import { Cloth } from './models/cloth';
 import { CommonService } from './services/commonService';
 import { delay } from 'rxjs';
 
@@ -50,7 +50,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {}
 
-  @HostListener('window:scroll', ['$event']) doSomething() {
+  @HostListener('window:scroll', ['$event']) onScroll() {
     this.showScrollButton = window.scrollY > 1000;
   }
 

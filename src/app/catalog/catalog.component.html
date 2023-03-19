@@ -1,6 +1,7 @@
 <app-catalog-filter
   (onClear)="clear()"
-  (onFilterUpdate)="update($event)"
+  [(filter)]="filter"
+  (filterChange)="onFilterUpdate($event)"
   [(type)]="type"
   (typeChange)="typeChange()"
 ></app-catalog-filter>

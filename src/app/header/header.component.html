@@ -2,8 +2,11 @@
   <button mat-icon-button>
     <mat-icon>menu</mat-icon>
   </button>
-  <span>My App</span>
+  <span>Cloth Shopper</span>
   <span class="flex-fill"></span>
+  <button mat-button [hidden]="priceCount == 0" class="fs-5">
+    {{ priceCount }} {{ currency }}.
+  </button>
   <a mat-icon-button [href]="link" class="text-white" target="_blank">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
       <path

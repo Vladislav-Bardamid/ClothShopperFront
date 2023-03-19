@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Cloth } from 'src/app/types/cloth';
+import { Cloth } from 'src/app/models/cloth';
+import { CommonService } from 'src/app/services/commonService';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-cloth-card',
@@ -10,12 +12,17 @@ export class ClothCardComponent implements OnInit {
   @Input() type = 0;
   @Input() item = new Cloth();
 
-  constructor() {}
+  currency = environment.currency;
+
+  constructor(private commonService: CommonService) {}
   ngOnInit() {}
 
-  @Output() onChanged = new EventEmitter<boolean>();
-
-  change(increased: any) {
-    this.onChanged.emit(increased);
+  setActive() {
+    this.item.active = !this.item.active;
+    if (this.item.active) {
+      this.commonService.updatePriceCount.next(this.item.price);
+    } else {
+      this.commonService.updatePriceCount.next(-this.item.price);
+    }
   }
 }

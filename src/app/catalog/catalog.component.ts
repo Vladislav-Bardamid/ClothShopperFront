@@ -1,9 +1,10 @@
-import { Component, Input, OnInit, Output } from '@angular/core';
+import { Component, HostListener, Input, OnInit, Output } from '@angular/core';
 import { ClothService } from '../services/clothService';
-import { Cloth } from '../types/cloth';
+import { Cloth } from '../models/cloth';
 import { Dialogs } from '../dialogs/dialogs';
-import { ClothesFilterModel } from '../types/filterModel';
+import { ClothesFilterModel } from '../models/filterModel';
 import { CommonService } from '../services/commonService';
+import { nameof } from '../../common';
 
 @Component({
   selector: 'app-catalog',
@@ -16,6 +17,10 @@ export class CatalogComponent implements OnInit {
   type = 0;
   sorting = 0;
   items: Cloth[] = [];
+  filter = new ClothesFilterModel();
+
+  lsActiveName = 'activeItemsIds';
+  lsFilterName = 'filter';
 
   constructor(
     private clothService: ClothService,
@@ -25,6 +30,7 @@ export class CatalogComponent implements OnInit {
 
   ngOnInit() {
     this.type = Number(localStorage.getItem('type') ?? 0);
+    this.loadFilter();
     this.update();
   }
 
@@ -36,12 +42,18 @@ export class CatalogComponent implements OnInit {
     this.items.forEach((element) => {
       element.active = false;
     });
+    this.estimateAndUpdatePrice();
   }
 
-  update(value?: ClothesFilterModel) {
+  onFilterUpdate(value: ClothesFilterModel) {
+    this.filter = value;
+    this.update();
+  }
+
+  update() {
     this.commonService.showSpinner.next(true);
 
-    this.clothService.getPhotos(value).subscribe((response) => {
+    this.clothService.getPhotos(this.filter).subscribe((response) => {
       if (response.error) {
         this.dialogs.openErrorDialog(response.error);
         return;
@@ -54,6 +66,51 @@ export class CatalogComponent implements OnInit {
       this.init = true;
 
       this.commonService.showSpinner.next(false);
+
+      this.loadActiveStates();
+
+      this.estimateAndUpdatePrice();
     });
+  }
+
+  estimateAndUpdatePrice() {
+    var price = this.items
+      .filter((x) => x.active)
+      .map((x) => x.price)
+      .reduce((previous, current) => previous + current, 0);
+    this.commonService.setPriceCount.next(price);
+  }
+
+  loadFilter() {
+    var filterString = localStorage.getItem(this.lsFilterName);
+
+    if (filterString == null) return;
+
+    this.filter = JSON.parse(filterString) as ClothesFilterModel;
+  }
+
+  saveFilter() {
+    localStorage.setItem(this.lsFilterName, JSON.stringify(this.filter));
+  }
+
+  loadActiveStates() {
+    var idsString = localStorage.getItem(this.lsActiveName);
+
+    if (idsString == null) return;
+
+    JSON.parse(idsString).forEach((x: number) => {
+      this.items.find((y) => y.id == x)!.active = true;
+    });
+  }
+
+  saveActiveIds() {
+    const activeItemsIds = this.items.filter((x) => x.active).map((x) => x.id);
+    localStorage.setItem(this.lsActiveName, JSON.stringify(activeItemsIds));
+  }
+
+  @HostListener('window:beforeunload')
+  beforeUnloadHandler() {
+    this.saveActiveIds();
+    this.saveFilter();
   }
 }

@@ -1,4 +1,5 @@
 export class Cloth {
+  id = 0;
   title = '';
   scrap = '';
   height = 0;

@@ -1,5 +1,5 @@
 export class ClothesFilterModel {
-  text: String | undefined;
+  text!: '';
   minPrice = 0;
   maxPrice = 0;
   sortType: SortType = 0;
@@ -7,7 +7,8 @@ export class ClothesFilterModel {
 
 export enum SortType {
   Date,
+  DateDesc,
   Name,
-  LowPrice,
-  HightPrice,
+  Price,
+  PriceDesc,
 }

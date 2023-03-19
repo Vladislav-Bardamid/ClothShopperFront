@@ -1,5 +1,4 @@
 import {
-  AfterContentInit,
   Component,
   EventEmitter,
   Input,
@@ -10,21 +9,15 @@ import { FormControl, FormGroup } from '@angular/forms';
 import {
   interval,
   timer,
-  takeWhile,
   Subject,
-  BehaviorSubject,
-  NEVER,
 } from 'rxjs';
 import {
-  repeat,
   takeUntil,
-  map,
   finalize,
   skip,
   switchMap,
-  startWith,
 } from 'rxjs/operators';
-import { ClothesFilterModel } from 'src/app/types/filterModel';
+import { ClothesFilterModel } from 'src/app/models/filterModel';
 
 @Component({
   selector: 'app-catalog-filter',
@@ -36,6 +29,8 @@ export class CatalogFilterComponent implements OnInit {
   minPrice = 0;
   maxPrice = 0;
   sorting = 0;
+
+  _type = 0;
 
   filterTimer = 0;
   timeout: any;
@@ -52,20 +47,29 @@ export class CatalogFilterComponent implements OnInit {
   interval$ = new Subject<void>();
   interval = 1500;
 
+  @Input() filter!: ClothesFilterModel;
+
   constructor() {}
 
   ngOnInit(): void {
-    this.lastValues = this.filterForm.value as ClothesFilterModel;
-
-    this.initFilterInterval();
-    this.initFilterChanging();
+    this.initFilters();
+    this.initFiltersSpinner();
+    this.initFiltersChanging();
   }
 
-  initFilterInterval() {
+  initFilters() {
+    if (!this.filter) return;
+
+    this.lastValues = this.filter;
+    this.filterForm.setValue(this.filter);
+  }
+
+  initFiltersSpinner() {
     this.interval$
       .pipe(
         switchMap(() =>
           interval(10).pipe(
+            skip(1),
             takeUntil(timer(this.interval)),
             finalize(() => (this.filterTimer = 0))
           )
@@ -75,8 +79,8 @@ export class CatalogFilterComponent implements OnInit {
         this.filterTimer = value;
       });
   }
-  
-  initFilterChanging() {
+
+  initFiltersChanging() {
     this.filterForm.valueChanges.subscribe((value) => {
       let model = value as ClothesFilterModel;
 
@@ -93,7 +97,7 @@ export class CatalogFilterComponent implements OnInit {
       }
 
       this.timeout = setTimeout(() => {
-        this.onFilterUpdate.emit(model);
+        this.filterChange.emit(model);
         this.lastValues = this.filterForm.value as ClothesFilterModel;
       }, this.interval);
     });
@@ -125,8 +129,6 @@ export class CatalogFilterComponent implements OnInit {
     this.filterForm.controls.minPrice.setValue(0);
   }
 
-  _type = 0;
-
   @Input()
   set type(value: number) {
     this._type = value;
@@ -140,5 +142,5 @@ export class CatalogFilterComponent implements OnInit {
   onClear = new EventEmitter();
 
   @Output()
-  onFilterUpdate = new EventEmitter<ClothesFilterModel>();
+  filterChange = new EventEmitter<ClothesFilterModel>();
 }

@@ -1,10 +1,10 @@
 <button
   class="btn btn-dark cloth-card d-flex align-items-stretch text-start w-100 h-100 p-0 text-nowrap overflow-hidden"
-  (click)="item.active = !item.active"
+  (click)="setActive()"
   [ngClass]="{ active: item.active, 'flex-column': type == 0 }"
 >
   <div
-    class="text-center overflow-hidden bg-black position-relative"
+    class="text-center overflow-hidden bg-black position-relative image-container"
     [ngClass]="{
       'flex-fill': type == 0,
       'medium-type-preview flex-shrink-0': type == 1
@@ -15,7 +15,7 @@
       *ngIf="item.scrap"
       class="position-absolute text-warning h-auto w-auto"
       [ngClass]="{ 'fs-3': type == 0 }"
-      style="top: 0.5rem; right: 0.5rem"
+      style="top: 0.5rem; right: 0.5rem; z-index: 1"
       [matTooltip]="item.scrap"
       matTooltipClass="card-tooltip"
       >warning</mat-icon
@@ -71,7 +71,7 @@
           <div>Ширина: {{ item.width }} см.</div>
           <div>Длина: {{ item.height }} см.</div>
         </div>
-        <div class="fs-3">{{ item.price }} грн.</div>
+        <div class="fs-3">{{ item.price }} {{ currency }}.</div>
       </div>
     </div>
   </div>

@@ -29,8 +29,9 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { SimpleDialogComponent } from './dialogs/simple-dialog/simple-dialog.component';
 import { Dialogs } from './dialogs/dialogs';
 import { CatalogFilterComponent } from './catalog/catalog-filter/catalog-filter.component';
-import { ToolbarComponent } from './toolbar/toolbar.component';
+import { HeaderComponent } from './header/header.component';
 import { NotFoundComponent } from './catalog/not-found/not-found.component';
+import { FooterComponent } from './footer/footer.component';
 
 var appModules = [
   BrowserModule,
@@ -64,8 +65,9 @@ var matModules = [
     AuthComponent,
     SimpleDialogComponent,
     CatalogFilterComponent,
-    ToolbarComponent,
+    HeaderComponent,
     NotFoundComponent,
+    FooterComponent,
   ],
   imports: [
     appModules,
