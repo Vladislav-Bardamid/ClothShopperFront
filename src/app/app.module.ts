@@ -1,86 +1,75 @@
 import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
-import { MatCardModule } from '@angular/material/card';
-import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatSelectModule } from '@angular/material/select';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { AppComponent } from './app.component';
+import { Router, TitleStrategy } from '@angular/router';
+import { AppRoutingModule } from './app-routing.module';
+import { JwtModule } from '@auth0/angular-jwt';
+import { environment } from 'src/environments/environment';
+import { LoginComponent } from './login/login.component';
+import { CommonService } from './services/common.service';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ClothCardComponent } from './catalog/cloth-card/cloth-card.component';
 import { HttpClientModule } from '@angular/common/http';
-import { HttpService } from './services/httpService';
-import { CatalogComponent } from './catalog/catalog.component';
-import { AuthComponent } from './auth/auth.component';
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { SimpleDialogComponent } from './dialogs/simple-dialog/simple-dialog.component';
-import { Dialogs } from './dialogs/dialogs';
-import { CatalogFilterComponent } from './catalog/catalog-filter/catalog-filter.component';
-import { HeaderComponent } from './header/header.component';
-import { NotFoundComponent } from './catalog/not-found/not-found.component';
-import { FooterComponent } from './footer/footer.component';
+import { TemplatePageTitleStrategy } from './titleStrategy';
 
-var appModules = [
-  BrowserModule,
-  AppRoutingModule,
-  BrowserAnimationsModule,
-  FormsModule,
-  HttpClientModule,
-  ReactiveFormsModule,
-];
+var jwtModule = JwtModule.forRoot({
+  config: {
+    tokenGetter: () => {
+      return localStorage.getItem('access_token');
+    },
+    allowedDomains: [environment.apiUrl],
+    disallowedRoutes: [`${environment.apiUrl}/login`],
+  },
+});
 
-var matModules = [
-  MatInputModule,
-  MatIconModule,
-  MatCardModule,
-  MatButtonModule,
-  MatMenuModule,
-  MatButtonToggleModule,
-  MatFormFieldModule,
-  MatSelectModule,
-  MatDialogModule,
-  MatTooltipModule,
-  MatToolbarModule,
-  MatProgressSpinnerModule,
-];
+var serviceWorkers = ServiceWorkerModule.register('ngsw-worker.js', {
+  enabled: !isDevMode(),
+  // Register the ServiceWorker as soon as the application is stable
+  // or after 30 seconds (whichever comes first).
+  registrationStrategy: 'registerWhenStable:30000',
+});
+
+// if (isDevMode()) {
+//   navigator.serviceWorker.getRegistrations().then((registrations) => {
+//     for (const registration of registrations) {
+//       registration.unregister();
+//     }
+//   });
+// }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    ClothCardComponent,
-    CatalogComponent,
-    AuthComponent,
-    SimpleDialogComponent,
-    CatalogFilterComponent,
-    HeaderComponent,
-    NotFoundComponent,
-    FooterComponent,
-  ],
+  declarations: [AppComponent, LoginComponent],
   imports: [
-    appModules,
-    matModules,
-    ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: !isDevMode(),
-      // Register the ServiceWorker as soon as the application is stable
-      // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000',
-    }),
+    jwtModule,
+    serviceWorkers,
+    BrowserModule,
     BrowserAnimationsModule,
+    HttpClientModule,
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
-  providers: [HttpService, Dialogs],
+  providers: [
+    {
+      provide: TitleStrategy,
+      useClass: TemplatePageTitleStrategy,
+    },
+  ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private router: Router, private commonService: CommonService) {
+    this.initAuthenfication();
+  }
+
+  initAuthenfication() {
+    if (localStorage.getItem('access_token')) {
+      this.commonService.isLogined = true;
+      return;
+    }
+
+    this.router.navigate(['login']);
+  }
+}

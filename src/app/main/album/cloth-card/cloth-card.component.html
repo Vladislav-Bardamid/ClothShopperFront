@@ -1,0 +1,80 @@
+<button
+  class="btn btn-dark cloth-card d-flex align-items-stretch text-start w-100 h-100 p-0 text-nowrap overflow-hidden elevation-2"
+  (click)="setActive()"
+  [ngClass]="{ active: item.isActive, 'flex-column': type == 0 }"
+>
+  <div
+    class="text-center ratio-4x3 bg-black image-container position-relative align-self-stretch mh-100 mw-100"
+    [ngClass]="{
+      'flex-fill': type == 0,
+      'flex-shrink-0 min-h-100': type == 1
+    }"
+    *ngIf="type != 2"
+    (mouseover)="onImageContainerMouseOver()"
+    (mouseleave)="onImageContainerMouseLeave()"
+  >
+    <img
+      [src]="item.urlSm"
+      (error)="onImageError(image)"
+      class="mh-100 mw-100"
+      #image
+    />
+    <span
+      *ngIf="item.scrap"
+      class="material-icons position-absolute text-warning h-auto w-auto"
+      [ngClass]="{ 'fs-3': type == 0 }"
+      style="top: 0.5rem; right: 0.5rem; z-index: 1"
+      [title]="item.scrap"
+      titleClass="card-tooltip"
+      >warning</span
+    >
+    <span
+      [hidden]="!showZoomButton || errorImageLoading"
+      class="material-icons position-absolute h-auto w-auto"
+      [ngClass]="{ 'fs-3': type == 0 }"
+      style="top: 0.5rem; left: 0.5rem; z-index: 1"
+      (mouseover)="onZoomMouseOver()"
+      (mouseleave)="onZoomMouseLeave()"
+      >zoom_in</span
+    >
+  </div>
+  <div
+    class="p-2 d-flex flex-column justify-content-between overflow-hidden"
+    [ngClass]="{
+      'flex-fill overflow-hidden': type == 1 || type == 2,
+      'ps-3': type == 1
+    }"
+  >
+    <div class="d-flex">
+      <div
+        class="overflow-hidden ellipsis flex-fill"
+        style="font-weight: 500"
+        [title]="item.title"
+        #title
+      >
+        {{ item.title }}&nbsp;
+      </div>
+      <span class="material-icons"
+        *ngIf="item.scrap"
+        [hidden]="type != 2"
+        class="text-warning flex-shrink-0"
+        style="top: 0.5rem; right: 0.5rem"
+        [title]="item.scrap"
+        >warning</span
+      >
+    </div>
+    <div
+      class="d-flex justify-content-between"
+      [ngClass]="{
+        'align-items-end': type == 0 || type == 2,
+        'flex-column': type == 1
+      }"
+    >
+      <div class="flex-fill overflow-hidden" style="color: #aaa">
+        <div class="overflow-hidden ellipsis">Ширина: {{ item.width }} см.</div>
+        <div class="overflow-hidden ellipsis">Длина: {{ item.height }} см.</div>
+      </div>
+      <div class="fs-3 ms-1">{{ item.price }} {{ currency }}.</div>
+    </div>
+  </div>
+</button>

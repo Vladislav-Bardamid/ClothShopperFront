@@ -1,0 +1,130 @@
+<div class="row pb-3">
+  <div class="row row-cols-1">
+    <form
+      [formGroup]="filterForm"
+      novalidate
+      class="col row flex-column flex-md-row"
+    >
+      <div class="col-xl col-5">
+        <div class="form-group position-relative">
+          <label class="font-weight-normal">Введите фильтр для поиска</label>
+          <input class="form-control" formControlName="text" type="text" />
+          <button
+            class="p-0 m-0 border-0 bg-transparent text-white position-absolute bottom-0 end-0"
+            *ngIf="filterForm.value.text"
+            matSuffix
+            span-button
+            (click)="this.filterForm.controls.text.setValue('')"
+          >
+            <span class="material-iconss">close</span>
+          </button>
+        </div>
+      </div>
+      <div class="col-auto">
+        <div class="form-group">
+          <label class="font-weight-normal">Мин. цена</label>
+          <input
+            class="form-control"
+            formControlName="minPrice"
+            type="number"
+            min="0"
+          />
+        </div>
+      </div>
+      <div class="col-auto">
+        <div class="form-group">
+          <label class="font-weight-normal">Макс. цена</label>
+          <input
+            class="form-control"
+            formControlName="maxPrice"
+            type="number"
+            min="0"
+          />
+        </div>
+      </div>
+      <div class="col-auto">
+        <div class="form-group">
+          <label class="font-weight-normal">Сортировка</label>
+          <select class="form-control form-select" formControlName="sortType">
+            <option [value]="0">От новых к старым</option>
+            <option [value]="1">От старых к новым</option>
+            <option [value]="2">По алфавиту от А до Я</option>
+            <option [value]="3">По алфавиту от Я до А</option>
+            <option [value]="4">От дешевых к дорогим</option>
+            <option [value]="5">От дорогих к дешевым</option>
+          </select>
+        </div>
+      </div>
+    </form>
+    <div class="col-auto row align-items-end">
+      <div class="col-auto">
+        <div class="form-group btn-group">
+          <button
+            class="btn btn-dark"
+            [class.active]="type == 0"
+            title="Большие"
+            (click)="setType(0)"
+          >
+            <span class="material-icons">grid_view</span>
+          </button>
+          <button
+            class="btn btn-dark"
+            [class.active]="type == 1"
+            title="Средние"
+            (click)="setType(1)"
+          >
+            <span class="material-icons">splitscreen</span>
+          </button>
+          <button
+            class="btn btn-dark"
+            [class.active]="type == 2"
+            title="Малые"
+            (click)="setType(2)"
+          >
+            <span class="material-icons">view_headline</span>
+          </button>
+        </div>
+      </div>
+      <div class="col-auto row">
+        <div class="col-auto form-group">
+          <button
+            class="btn btn-dark not-active"
+            span-button
+            (click)="resetFilters()"
+            title="Сбросить фильтры"
+          >
+            <span class="material-icons">filter_alt_off</span>
+          </button>
+        </div>
+        <div class="col-auto form-group">
+          <button
+            class="btn btn-dark"
+            span-button
+            (click)="clearSelectedClothes()"
+            title="Сбросить выделения"
+          >
+            <span class="material-icons">layers_clear</span>
+          </button>
+        </div>
+        <div class="col-auto form-group">
+          <button
+            class="btn btn-dark"
+            span-button
+            title="Обновить"
+            [disabled]="disableUpdate"
+            (click)="update.emit()"
+          >
+            <span class="material-icons" [ngClass]="{ pulse: pulseUpdate }">update</span>
+          </button>
+        </div>
+      </div>
+      <div
+        class="col-auto position-absolute"
+        style="right: 1rem"
+        [hidden]="!filterTimer"
+      >
+        <div class="spinner-border"></div>
+      </div>
+    </div>
+  </div>
+</div>

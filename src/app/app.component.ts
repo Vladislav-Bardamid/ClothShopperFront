@@ -1,60 +1,28 @@
-import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
-import {
-  animate,
-  animation,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ClothService } from './services/clothService';
-import { Dialogs } from './dialogs/dialogs';
-import { Cloth } from './models/cloth';
-import { CommonService } from './services/commonService';
-import { delay } from 'rxjs';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  animations: [
-    trigger('enterLeaveTrigger', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('100ms', style({ opacity: 0.5 })),
-      ]),
-      transition(':leave', [animate('100ms', style({ opacity: 0 }))]),
-    ]),
-  ],
+  styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnInit, AfterViewInit {
-  constructor(private router: Router, private commonService: CommonService) {}
+export class AppComponent {
+  darkMode = true;
 
-  showScrollButton = false;
-
-  taskCount = 0;
-  showSpinner = false;
-
-  ngOnInit(): void {
-    this.commonService.showSpinner.pipe(delay(0)).subscribe((value) => {
-      if (value) {
-        this.taskCount++;
-      } else {
-        this.taskCount--;
-      }
-
-      this.showSpinner = value;
-    });
+  constructor() {
+    this.initTheming();
   }
 
-  ngAfterViewInit(): void {}
-
-  @HostListener('window:scroll', ['$event']) onScroll() {
-    this.showScrollButton = window.scrollY > 1000;
-  }
-
-  scrollToTop() {
-    window.scrollTo({ top: 0 });
+  initTheming() {
+    // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+    var theme = localStorage.getItem('theme');
+    
+    if (
+      theme === 'dark' ||
+      (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    ) {
+      this.darkMode = true;
+    } else {
+      this.darkMode = false;
+    }
   }
 }

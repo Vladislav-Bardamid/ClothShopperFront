@@ -1,0 +1,18 @@
+<div class="position-fixed end-2 right-2">
+  <div
+    @enterLeaveTrigger
+    class="hover-opacity-animation rounded pb-3"
+    *ngIf="showSpinner"
+  >
+    <div class="spinner-border"></div>
+  </div>
+  <div
+    @enterLeaveTrigger
+    class="hover-opacity-animation rounded"
+    *ngIf="showScrollButton"
+  >
+    <button mat-fab color="primary" (click)="scrollToTop()">
+      <span class="material-iconss">arrow_up</span>
+    </button>
+  </div>
+</div>

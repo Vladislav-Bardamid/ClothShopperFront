@@ -1,23 +1,5 @@
-<app-header></app-header>
-<div class="px-2 pb-3 main-container" style="padding-top: 5rem">
-  <router-outlet items="items"></router-outlet>
-</div>
-<div class="position-fixed" style="right: 5%; bottom: 5%">
-  <div
-    @enterLeaveTrigger
-    class="hover-opacity-animation rounded pb-3"
-    [hidden]="!showSpinner"
-  >
-  <mat-spinner></mat-spinner>
-  </div>
-  <div
-    @enterLeaveTrigger
-    class="hover-opacity-animation rounded"
-    [hidden]="!showScrollButton"
-  >
-    <button mat-fab (click)="scrollToTop()">
-      <mat-icon>keyboard_arrow_up</mat-icon>
-    </button>
+<div [class.dark]="darkMode">
+  <div class="dark:bg-neutral-850 dark:text-white">
+    <router-outlet></router-outlet>
   </div>
 </div>
-<app-footer></app-footer>

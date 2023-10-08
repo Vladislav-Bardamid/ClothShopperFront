@@ -1,0 +1,27 @@
+<div
+  class="mx-auto border rounded border-secondary p-5"
+  style="width: 25vw; margin-top: 15vh"
+>
+  <div class="fs-2">Авторизуйтесь</div>
+  <form [formGroup]="loginForm" (ngSubmit)="submit()">
+    <div class="form-group">
+      <label>Логин</label>
+      <input
+        class="form-control"
+        formControlName="email"
+        type="text"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label>Пароль</label>
+      <input
+        class="form-control"
+        formControlName="password"
+        type="password"
+        required
+      />
+    </div>
+    <button class="btn btn-secondary" type="submit">Войти</button>
+  </form>
+</div>

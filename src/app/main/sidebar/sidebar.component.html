@@ -1,0 +1,89 @@
+<aside class="h-screen fixed bg-neutral-900 w-72">
+  <a [routerLink]="['/']" class="block p-4 text-xl"
+    ><span class="rounded-full bg-white p-1 text-black">CS</span>&nbsp;
+    <span class="">{{ title }}</span></a
+  >
+  <div class="sidebar p-4">
+    <div class="border-y border-neutral-400 mt-3 pb-3 mb-3 flex">
+      <div class="image">
+        <img src="" class="img-circle shadow" />
+      </div>
+      <div class="info">
+        <a href="#" class="d-block"></a>
+      </div>
+    </div>
+    <nav class="mt-2" overlay-scrollbars>
+      <ul class="">
+        <li
+          *ngFor="let item of menuItems; let i = index"
+          class="my-2"
+          [class.menu-open]="
+            item.children &&
+            ((routerLinkRef.isActive && selectedMenuId == undefined) ||
+              selectedMenuId == i)
+          "
+          routerLinkActive
+          [routerLinkActiveOptions]="{ exact: item.link == '/' }"
+          #routerLinkRef="routerLinkActive"
+        >
+          <a
+            *ngIf="!item.children; else linkBtn"
+            class="p-2 flex items-center gap-1 hover:bg-neutral-800 rounded"
+            [routerLink]="[item.link]"
+            routerLinkActive="bg-slate-600 hover:!bg-slate-500"
+            [routerLinkActiveOptions]="{ exact: item.link == '/' }"
+            (click)="selectedMenuId = -1"
+            ><span class="material-icons">{{ item.icon }}</span>
+            <span>{{ item.title }}</span></a
+          >
+          <ng-template #linkBtn>
+            <button
+              class="p-2 flex items-center gap-1 w-full text-left hover:bg-neutral-800 rounded"
+              [ngClass]="{
+                'bg-slate-700': routerLinkRef.isActive,
+                'hover:!bg-slate-500': routerLinkRef.isActive
+              }"
+              (click)="
+                selectedMenuId =
+                  (routerLinkRef.isActive && selectedMenuId == undefined) ||
+                  selectedMenuId == i
+                    ? -1
+                    : i
+              "
+            >
+              <span class="material-icons">{{ item.icon }}</span>
+              <span class="flex-1">{{ item.title }} </span>
+              <span
+                class="material-icons rotate-90 transition-transform"
+                [class.!rotate-0]="
+                  item.children &&
+                  ((routerLinkRef.isActive && selectedMenuId == undefined) ||
+                    selectedMenuId == i)
+                "
+                >expand_more</span
+              >
+            </button>
+            <ul
+              class="ml-4 overflow-hidden"
+              [@heightState]="
+                (routerLinkRef.isActive && selectedMenuId == undefined) ||
+                selectedMenuId == i
+              "
+            >
+              <li class="my-2" *ngFor="let childItem of item.children">
+                <a
+                  class="p-2 flex items-center gap-1 hover:bg-neutral-800 rounded"
+                  [routerLink]="[item.link, childItem.link]"
+                  routerLinkActive="bg-neutral-700 hover:!bg-neutral-600"
+                  (click)="onSelectAlbum.emit()"
+                  ><span class="material-icons">{{ childItem.icon }}</span>
+                  <span>{{ childItem.title }}</span></a
+                >
+              </li>
+            </ul>
+          </ng-template>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</aside>
