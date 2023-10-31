@@ -23,7 +23,7 @@ export class HttpService {
       .get<T>(url, { params: options?.params, headers })
       .pipe(
         catchError((x) => {
-          alert(x.message);
+          this.resolveError(x);
           throw x;
         })
       );
@@ -40,7 +40,24 @@ export class HttpService {
       .post<T>(url, body, { params: options?.params, headers })
       .pipe(
         catchError((x) => {
-          alert(x.message);
+          this.resolveError(x);
+          throw x;
+        })
+      );
+  }
+
+  public put<T>(link: string, body?: any, options: Partial<HttpOptions> = {}) {
+    var url = `${environment.apiUrl}/${link}`;
+
+    this.assignDefaultOptions(options);
+
+    var headers = this.createAuthorizationHeader<T>(options);
+
+    return this.httpClient
+      .put<T>(url, body, { params: options?.params, headers })
+      .pipe(
+        catchError((x) => {
+          this.resolveError(x);
           throw x;
         })
       );
@@ -61,10 +78,19 @@ export class HttpService {
       .delete<T>(url, { body: body, params: options?.params, headers })
       .pipe(
         catchError((x) => {
-          alert(x.message);
+          this.resolveError(x);
           throw x;
         })
       );
+  }
+
+  private resolveError(result: any) {
+    if (result.status == 401) {
+      this.router.navigate(['login']);
+      return;
+    }
+
+    alert(`${result.message}\r\n${result.error}`);
   }
 
   private getToken() {
@@ -95,7 +121,7 @@ export class HttpService {
   }
 }
 
-class HttpOptions {
-  isAuthorized?: boolean;
-  params?: HttpParams;
+interface HttpOptions {
+  isAuthorized: boolean;
+  params: HttpParams;
 }

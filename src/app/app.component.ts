@@ -1,4 +1,10 @@
-import { Component } from '@angular/core';
+import {
+  ApplicationRef,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  signal,
+} from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -6,7 +12,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  darkMode = true;
+  darkMode = signal(false);
 
   constructor() {
     this.initTheming();
@@ -15,14 +21,14 @@ export class AppComponent {
   initTheming() {
     // On page load or when changing themes, best to add inline in `head` to avoid FOUC
     var theme = localStorage.getItem('theme');
-    
+
     if (
       theme === 'dark' ||
       (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)
     ) {
-      this.darkMode = true;
+      this.darkMode.set(true);
     } else {
-      this.darkMode = false;
+      this.darkMode.set(false);
     }
   }
 }

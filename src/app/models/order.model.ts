@@ -1,4 +1,5 @@
 export interface Order {
+  id: number;
   clothId: number;
   userId: number;
   orderListId: number;

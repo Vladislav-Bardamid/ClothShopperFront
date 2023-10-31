@@ -1,5 +1,5 @@
 export interface UserModel {
-    userName: string;
-    accessToken: string;
-    expires: string;
+  userName: string;
+  accessToken: string;
+  expires: string;
 }

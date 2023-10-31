@@ -1,43 +1,49 @@
-<app-main-album-filter
-  [(type)]="type"
-  [(filter)]="filter!"
-  [pulseUpdate]="pulseUpdate"
-  (onClear)="clear()"
-  (filterChange)="onFilterUpdate($event)"
-  (typeChange)="typeChange($event)"
-  (update)="update()"
-  [disableUpdate]="loading"
-></app-main-album-filter>
-<ng-template #error>
-  <app-main-album-loading-error
-    *ngIf="errorMessage"
-    [text]="errorMessage"
-    class="mx-auto"
-  ></app-main-album-loading-error>
-</ng-template>
-<div class>
-  <div
-    class="cloth-grid"
-    [ngClass]="{
-      large: type == 0,
-      medium: type == 1,
-      small: type == 2
-    }"
-    [@listAnimation]="items.length"
-  >
-    <div *ngFor="let item of items">
-      <app-main-cloth-card [item]="item" [type]="type"></app-main-cloth-card>
+<div class="p-8">
+  <app-main-album-filter
+    [(type)]="type"
+    [(filter)]="filter!"
+    [pulseUpdate]="pulseUpdate"
+    (onClear)="clear()"
+    (filterChange)="onFilterUpdate($event)"
+    (typeChange)="typeChange($event)"
+    (update)="loadAlbum()"
+    [disableUpdate]="loading"
+  ></app-main-album-filter>
+  <ng-template #error>
+    <app-main-album-loading-error
+      *ngIf="errorMessage"
+      [text]="errorMessage"
+      class="mx-auto"
+    ></app-main-album-loading-error>
+  </ng-template>
+  <div class>
+    <div
+      class="grid gap-4"
+      [ngClass]="{
+        'grid-cols-[repeat(auto-fill,minmax(21rem,1fr))]':
+          type == 0 || type == 1,
+        'grid-cols-[repeat(auto-fill,minmax(15rem,1fr))]': type == 2
+      }"
+      [@listAnimation]="items.length ? (type == 0 ? '50' : '20') : ''"
+    >
+      <div *ngFor="let item of items; trackBy: identify">
+        <app-main-cloth-card
+          [item]="item"
+          [type]="type"
+          (setActive)="processCloth($event)"
+        ></app-main-cloth-card>
+      </div>
     </div>
   </div>
-</div>
-<div
-  *ngIf="previewSrc"
-  @fadeInOut
-  class="pointer-none p-2 d-flex flex-column justify-content-center w-100 h-100 position-fixed top-0 start-0 overflow-hidden bg-black bg-opacity-75"
-  style="z-index: 10000"
->
-  <img
-    class="d-block mx-auto bg-black opacity-100 mh-100 mw-100"
-    [src]="previewSrc"
-  />
+  <div
+    *ngIf="previewSrc"
+    @fadeInOut
+    class="pointer-events-none p-2 flex flex-col justify-center w-full h-full fixed top-0 start-0 overflow-hidden bg-black bg-opacity-75"
+    style="z-index: 10000"
+  >
+    <img
+      class="d-block mx-auto bg-black opacity-100 mh-100 mw-100"
+      [src]="previewSrc"
+    />
+  </div>
 </div>

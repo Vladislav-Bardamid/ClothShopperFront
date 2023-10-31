@@ -1,0 +1,39 @@
+<div routerLinkActive #routerLinkRef="routerLinkActive">
+  <a
+    *ngIf="!item.children; else linkBtn"
+    class="p-2 flex items-center gap-1 hover:bg-neutral-800 rounded"
+    [routerLink]="item.link"
+    routerLinkActive="bg-slate-700 hover:!bg-slate-600"
+    [routerLinkActiveOptions]="{ exact: item.link == '/' }"
+    ><span class="material-icons">{{ item.icon }}</span>
+    <span class="hidden lg:block">{{ item.title }}</span></a
+  >
+  <ng-template #linkBtn>
+    <button
+      class="p-2 flex items-center gap-1 w-full text-left hover:bg-neutral-800 rounded"
+      [ngClass]="{
+        'bg-slate-700 hover:!bg-slate-600': routerLinkRef.isActive
+      }"
+      (click)="toggle()"
+    >
+      <span class="material-icons">{{ item.icon }}</span>
+      <span class="flex-1 hidden lg:block">{{ item.title }} </span>
+      <span
+        class="material-icons transition-transform hidden lg:block"
+        [ngClass]="{ 'rotate-90': !isOpen }"
+        >expand_more</span
+      >
+    </button>
+    <ul class="lg:ml-4 overflow-hidden" [@heightState]="isOpen">
+      <li class="my-2" *ngFor="let childItem of item.children">
+        <a
+          class="p-2 flex items-center gap-1 hover:bg-neutral-800 rounded"
+          [routerLink]="[item.link, childItem.link]"
+          routerLinkActive="bg-neutral-700 hover:!bg-neutral-600"
+          ><span class="material-icons">{{ childItem.icon }}</span>
+          <span class="hidden lg:block">{{ childItem.title }}</span></a
+        >
+      </li>
+    </ul>
+  </ng-template>
+</div>

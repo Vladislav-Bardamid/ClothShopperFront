@@ -23,6 +23,8 @@ export class ClothCardComponent implements OnInit, OnChanges {
   @Input() type = 0;
   @Input() item!: ClothModel;
 
+  @Output() setActive = new EventEmitter<ClothModel>();
+
   @ViewChild('title') titleElement!: ElementRef;
 
   isTitleOverflow = false;
@@ -67,13 +69,10 @@ export class ClothCardComponent implements OnInit, OnChanges {
     });
   }
 
-  setActive() {
+  processClick() {
     this.item.isActive = !this.item.isActive;
-    if (this.item.isActive) {
-      this.commonService.createOrder.next(this.item);
-    } else {
-      this.commonService.removeOrder.next(this.item);
-    }
+
+    this.setActive.emit(this.item);
   }
 
   onImageError(imageRef: HTMLImageElement) {

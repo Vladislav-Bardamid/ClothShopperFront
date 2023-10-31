@@ -1,11 +1,12 @@
-<div class="" [class.sidebar-collapse]="sidebarCollapsed">
-  <app-main-header></app-main-header>
-  <app-main-sidebar></app-main-sidebar>
-  <div class="ml-72 py-[56.77px] h-screen">
-    <h1 class="">
-      <!-- {{ _title }} -->
-    </h1>
-    <div class="p-4">
+<div>
+  <div class="fixed lg:w-72 top-0 left-0">
+    <app-main-sidebar></app-main-sidebar>
+  </div>
+  <div class="fixed top-0 left-0 w-full lg:pl-72 pl-[72px]" #header>
+    <app-main-header></app-main-header>
+  </div>
+  <div class="lg:ml-72 ml-[72px] min-h-screen flex flex-col" [ngStyle]="{ 'padding-top': header.offsetHeight + 'px' }">
+    <div class="grow mb-4">
       <router-outlet></router-outlet>
     </div>
     <app-main-footer></app-main-footer>

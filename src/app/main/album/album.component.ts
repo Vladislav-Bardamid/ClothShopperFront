@@ -1,4 +1,10 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { catchError, finalize } from 'rxjs';
 import { ActivatedRoute, Router, TitleStrategy } from '@angular/router';
 import { ClothModel } from 'src/app/models/cloth.model';
@@ -16,24 +22,26 @@ import {
   trigger,
 } from '@angular/animations';
 
+function createAnimation(staggerDelay: number) {
+  return query(
+    ':enter',
+    [
+      style({ opacity: 0 }),
+      stagger(staggerDelay, [animate('600ms ease-out', style({ opacity: 1 }))]),
+    ],
+    {
+      optional: true,
+    }
+  );
+}
 @Component({
   selector: 'app-main-album',
   templateUrl: './album.component.html',
   styleUrls: ['./album.component.css'],
   animations: [
     trigger('listAnimation', [
-      transition('* <=> *', [
-        query(
-          ':enter',
-          [
-            style({ opacity: 0 }),
-            stagger(50, [animate('600ms ease-out', style({ opacity: 1 }))]),
-          ],
-          {
-            optional: true,
-          }
-        ),
-      ]),
+      transition('* => 50', [createAnimation(50)]),
+      transition('* => 20', [createAnimation(20)]),
     ]),
     trigger('fadeInOut', [
       transition(':enter', [
@@ -44,7 +52,7 @@ import {
     ]),
   ],
 })
-export class AlbumComponent implements OnInit {
+export class AlbumComponent implements OnInit, OnDestroy {
   init = false;
   loading = false;
 
@@ -70,8 +78,12 @@ export class AlbumComponent implements OnInit {
   timeout: any;
   interval = 5000;
 
+  previewTimeout: any;
+
   selectedIds: number[] = [];
+  preSelectedIds: number[] = [];
   unSelectedIds: number[] = [];
+  preUnSelectedIds: number[] = [];
 
   @ViewChild('fullPreviewImage') previewImage!: ElementRef;
 
@@ -85,9 +97,75 @@ export class AlbumComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.type = Number(localStorage.getItem('type') ?? 0);
+    this.loadType();
+
     this.loadFilter();
 
+    this.initPreview();
+
+    this.initUnload();
+
+    this.initAlbumIdChange();
+  }
+
+  ngOnDestroy() {
+    this.saveAll();
+  }
+
+  initUnload() {
+    this.commonService.beforeUnload.subscribe(() => this.saveAll());
+  }
+
+  initPreview() {
+    this.commonService.openFullPreview.subscribe((value) => {
+      this.previewTimeout = setTimeout(() => {
+        this.previewSrc = value;
+      }, 200);
+    });
+
+    this.commonService.closeFullPreview.subscribe(() => {
+      clearTimeout(this.previewTimeout);
+      this.previewSrc = '';
+    });
+  }
+
+  processCloth(cloth: ClothModel) {
+    if (cloth.isActive) {
+      this.createOrder(cloth);
+      this.orderService.changeOrderPriceSum.next(cloth.price);
+    } else {
+      this.removeOrder(cloth);
+      this.orderService.changeOrderPriceSum.next(-cloth.price);
+    }
+  }
+
+  createOrder(value: ClothModel) {
+    var isUnSelected = this.unSelectedIds.includes(value.id);
+
+    if (isUnSelected) {
+      var index = this.unSelectedIds.indexOf(value.id);
+      this.unSelectedIds.splice(index, 1);
+    } else {
+      this.selectedIds.push(value.id);
+    }
+
+    this.initSendOrders();
+  }
+
+  removeOrder(value: ClothModel) {
+    var isSelected = this.selectedIds.includes(value.id);
+
+    if (isSelected) {
+      var index = this.selectedIds.indexOf(value.id);
+      this.selectedIds.splice(index, 1);
+    } else {
+      this.unSelectedIds.push(value.id);
+    }
+
+    this.initSendOrders();
+  }
+
+  initAlbumIdChange() {
     this.route.params.subscribe((params) => {
       this.albumId = params['albumId'];
 
@@ -98,49 +176,13 @@ export class AlbumComponent implements OnInit {
       });
 
       if (this.albumId) {
-        this.update();
+        this.loadAlbum();
         return;
       }
 
       this.albumService.getAlbums().subscribe((response) => {
         this.router.navigate(['/catalog', response[0].id]);
       });
-    });
-
-    this.commonService.beforeUnload.subscribe(() => this.beforeUnloadHandler());
-
-    this.commonService.createOrder.subscribe((value) => {
-      var isUnSelected = this.unSelectedIds.includes(value.id);
-
-      if (isUnSelected) {
-        var index = this.unSelectedIds.indexOf(value.id);
-        this.unSelectedIds.splice(index, 1);
-      } else {
-        this.selectedIds.push(value.id);
-      }
-
-      this.initSendOrders();
-    });
-
-    this.commonService.removeOrder.subscribe((value) => {
-      var isSelected = this.selectedIds.includes(value.id);
-
-      if (isSelected) {
-        var index = this.selectedIds.indexOf(value.id);
-        this.selectedIds.splice(index, 1);
-      } else {
-        this.unSelectedIds.push(value.id);
-      }
-
-      this.initSendOrders();
-    });
-
-    this.commonService.openFullPreview.subscribe((value) => {
-      this.previewSrc = value;
-    });
-
-    this.commonService.closeFullPreview.subscribe(() => {
-      this.previewSrc = '';
     });
   }
 
@@ -149,24 +191,19 @@ export class AlbumComponent implements OnInit {
 
     if (this.selectedIds.length == 0 && this.unSelectedIds.length == 0) return;
 
-    this.timeout = setTimeout(() => {
-      this.addOrders();
-      this.removeOrders();
-    }, this.interval);
+    this.timeout = setTimeout(() => this.saveOrders(), this.interval);
   }
 
-  addOrders() {
-    if (this.selectedIds.length == 0) return;
+  saveOrders() {
+    if (this.selectedIds.length == 0 && this.unSelectedIds.length == 0) return;
 
-    this.orderService.addOrders(this.selectedIds).subscribe(() => {
+    const command = {
+      add: this.selectedIds,
+      delete: this.unSelectedIds,
+    };
+
+    this.orderService.changeOrders(command).subscribe(() => {
       this.selectedIds = [];
-    });
-  }
-
-  removeOrders() {
-    if (this.unSelectedIds.length == 0) return;
-
-    this.orderService.removeOrders(this.unSelectedIds).subscribe(() => {
       this.unSelectedIds = [];
     });
   }
@@ -175,18 +212,27 @@ export class AlbumComponent implements OnInit {
     return Number(this.route.snapshot.paramMap.get('albumId'));
   }
 
-  beforeUnloadHandler() {
+  saveAll() {
+    clearTimeout(this.timeout);
+
+    this.saveOrders();
+
     this.saveFilter();
+
+    this.saveType();
   }
 
   typeChange(value: number) {
+    if (this.type == value) return;
+
     this.type = value;
-    localStorage.setItem('type', this.type.toString());
+
+    this.saveType();
   }
 
   clear() {
     this.orderService.removeAllOrders().subscribe(() => {
-      this.commonService.clearOrders.next();
+      this.orderService.clearOrders.next();
 
       this.items.forEach((item) => {
         item.isActive = false;
@@ -202,10 +248,10 @@ export class AlbumComponent implements OnInit {
   onFilterUpdate(value: ClothesFilterModel) {
     this.filter = Object.assign(this.filter!, value);
 
-    this.update();
+    this.loadAlbum();
   }
 
-  update() {
+  loadAlbum() {
     if (this.loading) return;
 
     this.commonService.showSpinner.next(true);
@@ -220,7 +266,6 @@ export class AlbumComponent implements OnInit {
         finalize(() => {
           this.commonService.showSpinner.next(false);
           this.loading = false;
-          this.items = [];
         }),
         catchError((error: any) => {
           this.errorMessage =
@@ -231,17 +276,23 @@ export class AlbumComponent implements OnInit {
         })
       )
       .subscribe((data) => {
-        if (data.items.length > 0) {
-          setTimeout(() => (this.items = data.items));
+        this.items = data.items;
 
-          this.commonService.setPriceCount.next(data.price);
-        } else {
+        if (data.items.length == 0) {
           this.errorMessage =
             'Ничего не найдено. Попробуйте изменить пареметры поиска.';
         }
 
         this.init = true;
       });
+  }
+
+  loadType() {
+    this.type = Number(localStorage.getItem('type') ?? 0);
+  }
+
+  saveType() {
+    localStorage.setItem('type', this.type.toString());
   }
 
   loadFilter() {
@@ -256,5 +307,9 @@ export class AlbumComponent implements OnInit {
     if (!this.filter) return;
 
     localStorage.setItem(this.lsFilterName, JSON.stringify(this.filter));
+  }
+
+  identify(index: number, item: ClothModel) {
+    return item.id;
   }
 }

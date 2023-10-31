@@ -13,6 +13,8 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { TemplatePageTitleStrategy } from './titleStrategy';
+import { ControlsModule } from './controls/controls.module';
+import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
 
 var jwtModule = JwtModule.forRoot({
   config: {
@@ -50,6 +52,8 @@ var serviceWorkers = ServiceWorkerModule.register('ngsw-worker.js', {
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    ControlsModule,
+    OverlayscrollbarsModule
   ],
   providers: [
     {
@@ -66,7 +70,6 @@ export class AppModule {
 
   initAuthenfication() {
     if (localStorage.getItem('access_token')) {
-      this.commonService.isLogined = true;
       return;
     }
 

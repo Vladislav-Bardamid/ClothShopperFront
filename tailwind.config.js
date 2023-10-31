@@ -1,13 +1,17 @@
 /** @type {import('tailwindcss').Config} */
+
+const colors = require("tailwindcss/colors");
+
 module.exports = {
   content: ["./src/**/*.{html,ts}"],
   theme: {
     extend: {
       colors: {
-        "neutral-850": "#202020",
+        primary: { dark: "#1c1e1f" },
+        secondary: { dark: "#181a1b" },
       },
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/forms")],
   darkMode: "class",
 };

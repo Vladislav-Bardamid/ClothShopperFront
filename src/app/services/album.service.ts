@@ -13,13 +13,9 @@ export class AlbumService {
   private albums$?: Observable<AlbumModel[]>;
 
   getAlbums() {
-    if (this.albums$ != null) return this.albums$;
-
-    this.albums$ = this.http
+    return (this.albums$ ??= this.http
       .get<AlbumModel[]>(this.controllerName)
-      .pipe(shareReplay(1));
-
-    return this.albums$;
+      .pipe(shareReplay(1)));
   }
 
   getAlbum(id: number) {

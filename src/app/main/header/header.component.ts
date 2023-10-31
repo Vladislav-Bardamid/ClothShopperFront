@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonService } from 'src/app/services/common.service';
+import { OrderService } from 'src/app/services/order.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -8,39 +9,34 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit {
-  priceCount = 0;
+  priceSum = 0;
 
   currency = environment.currency;
 
   showLeftSideNav = false;
   showRightSideNav = false;
 
-  isLogined = this.commonService.isLogined;
-
   constructor(
-    private commonService: CommonService
+    private commonService: CommonService,
+    private orderService: OrderService
   ) {}
 
   ngOnInit(): void {
-    this.commonService.setPriceCount.subscribe((sum) => {
-      this.priceCount = sum;
+    this.loadOrdersPriceSum();
+
+    this.orderService.changeOrderPriceSum.subscribe((price) => {
+      this.priceSum += price;
     });
 
-    this.commonService.createOrder.subscribe((cloth) => {
-      this.priceCount += cloth.price;
+    this.orderService.clearOrders.subscribe(() => {
+      this.loadOrdersPriceSum();
     });
+  }
 
-    this.commonService.removeOrder.subscribe((cloth) => {
-      this.priceCount -= cloth.price;
-    });
-
-    this.commonService.clearOrders.subscribe((cloth) => {
-      this.priceCount = 0;
-    });
-
-    this.commonService.onLogined.subscribe(() => {
-      this.isLogined = true;
-    });
+  loadOrdersPriceSum() {
+    this.orderService.getOrderList().subscribe((orderList) => {
+      this.priceSum = orderList.priceSum;
+    })
   }
 
   collapseSidebar() {

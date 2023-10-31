@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonService } from '../services/common.service';
 
 @Component({
@@ -7,13 +7,13 @@ import { CommonService } from '../services/common.service';
   styleUrls: ['./main.component.css'],
 })
 export class MainComponent implements OnInit {
-  sidebarCollapsed = false;
+  sidebarCollapsed = signal(false);
 
   constructor(private readonly commonService: CommonService) {}
-  
+
   ngOnInit(): void {
     this.commonService.collapseSidebar.subscribe(() => {
-      this.sidebarCollapsed = !this.sidebarCollapsed;
-    })
+      this.sidebarCollapsed.mutate((value) => !value);
+    });
   }
 }

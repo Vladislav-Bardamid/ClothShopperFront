@@ -90,6 +90,10 @@ export class AlbumFilterComponent implements OnInit {
     this.onClear.emit();
   }
 
+  updateCLothes() {
+    this.update.emit();
+  }
+
   resetLoading() {
     clearTimeout(this.timeout);
   }

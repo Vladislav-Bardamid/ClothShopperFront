@@ -1,0 +1,64 @@
+<form card class="flex space-x-4 items-end m-8">
+  <div>
+    <label class="block">Время создания</label>
+    <input form-control type="datetime-local" [value]="orderDate" />
+  </div>
+  <div>
+    <label class="block">Разброс</label>
+    <input
+      form-control
+      class="w-20"
+      type="number"
+      min="0"
+      max="50"
+      value="10"
+    />
+    <span class="text-neutral-400 ml-1 italic">секунд</span>
+  </div>
+  <div class="grow"></div>
+  <span class="text-4xl"
+    ><span class="hidden xl:inline">Всего: </span>{{ orderList?.priceSum }}
+    {{ currency }}.</span
+  >
+  <button button="gray">
+    <span class="material-icons">add</span><br />
+    Создать
+  </button>
+</form>
+<table class="w-full text-left [&_tr>*]:px-4 [&_tr>*]:py-2 whitespace-nowrap">
+  <thead class="border-b border-neutral-800">
+    <tr>
+      <th class="hidden lg:table-cell">#</th>
+      <th>Фото</th>
+      <th class="w-full">Название</th>
+      <th class="hidden xl:table-cell">Информация</th>
+      <th>Цена</th>
+      <th>Действия</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      class="border-b border-neutral-800 hover:bg-neutral-800 odd:bg-primary-dark"
+      *ngFor="let order of orderList?.orders; let i = index"
+    >
+      <td class="hidden lg:table-cell">{{ i + 1 }}</td>
+      <td class="flex justify-center items-stretch">
+        <img class="md:h-12 md:max-w-none" [src]="order.urlSm" alt="" />
+      </td>
+      <td class="max-w-xs overflow-hidden text-ellipsis">{{ order.title }}</td>
+      <td class="hidden xl:table-cell">
+        <div>Длина: {{ order.height }} см.</div>
+        <div>Ширина: {{ order.width }} см.</div>
+      </td>
+      <td class="text-xl">{{ order.price }} {{ currency }}</td>
+      <td>
+        <button
+          class="!text-red-700 hover:!text-red-600"
+          (click)="deleteOrder(order)"
+        >
+          Удалить
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -25,9 +25,6 @@ export class LoginComponent {
     };
     this.authService.login(model).subscribe(x => {
       localStorage.setItem('access_token', x.accessToken);
-
-      this.commonService.onLogined.next();
-      this.commonService.isLogined = true;
       
       this.router.navigate(['/']);
     });

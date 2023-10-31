@@ -1,10 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AlbumComponent } from './album/album.component';
 import { HomeComponent } from './home/home.component';
 import { MainComponent } from '../main/main.component';
-import { OrderListComponent } from './order-list/order-list.component';
-import { OrderHistoryComponent } from './order-history/order-history.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 
 export const mainRoutes: Routes = [
@@ -18,64 +15,19 @@ export const mainRoutes: Routes = [
         title: 'Информация',
       },
       {
-        path: 'albums/:albumId',
-        component: AlbumComponent,
+        path: 'albums',
+        loadChildren: () =>
+          import('./album/album.module').then((m) => m.AlbumModule),
       },
       {
         path: 'orders',
-        children: [
-          {
-            path: '',
-            redirectTo: 'new',
-            pathMatch: 'full',
-          },
-          {
-            path: 'new',
-            component: OrderListComponent,
-            title: 'Новый заказ',
-          },
-          {
-            path: 'history',
-            component: OrderHistoryComponent,
-            title: 'История заказов',
-          },
-          {
-            path: ':orderId',
-            component: OrderListComponent,
-            title: 'Заказы',
-          },
-        ],
+        loadChildren: () =>
+          import('./order/order.module').then((m) => m.OrderModule),
       },
       {
         path: 'users',
-        title: 'Пользователи',
-        children: [
-          {
-            path: '',
-            redirectTo: 'current',
-            pathMatch: 'full',
-          },
-          {
-            path: 'current',
-            component: OrderListComponent,
-            title: 'Мой профиль',
-          },
-          {
-            path: 'new',
-            component: OrderListComponent,
-            title: 'Новый профиль',
-          },
-          {
-            path: 'all',
-            component: OrderListComponent,
-            title: 'Профили',
-          },
-          {
-            path: ':userId',
-            component: OrderListComponent,
-            title: 'Профиль пользователя',
-          },
-        ],
+        loadChildren: () =>
+          import('./user/user.module').then((m) => m.UserModule),
       },
       {
         path: '**',
