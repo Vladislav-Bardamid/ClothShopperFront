@@ -13,7 +13,7 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     this.commonService.collapseSidebar.subscribe(() => {
-      this.sidebarCollapsed.mutate((value) => !value);
+      this.sidebarCollapsed.update((value) => !value);
     });
   }
 }

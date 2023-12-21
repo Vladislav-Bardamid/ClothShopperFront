@@ -52,12 +52,12 @@ export class SidebarItemComponent implements OnInit {
     this.update();
 
     this.commonService.collapseSidebar.subscribe(() => {
-      this.sidebarCollapsed.mutate((value) => !value);
+      this.sidebarCollapsed.update((value) => !value);
     });
 
     this.router.events.subscribe((e) => {
       if (!(e instanceof NavigationEnd)) return;
-      
+
       this.update();
     });
   }

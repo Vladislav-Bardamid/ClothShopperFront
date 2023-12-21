@@ -73,10 +73,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "ClothShopperFront:build:production"
+              "buildTarget": "ClothShopperFront:build:production"
             },
             "development": {
-              "browserTarget": "ClothShopperFront:build:development"
+              "buildTarget": "ClothShopperFront:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -84,7 +84,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ClothShopperFront:build"
+            "buildTarget": "ClothShopperFront:build"
           }
         },
         "test": {
@@ -106,5 +106,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }
